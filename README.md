@@ -11,7 +11,16 @@ This repository contains the code and resources for the lecture on Deep Reinforc
 - `slides/`: PDF slides of the theoretical lecture.
 
 ## Installation
-First, clone the repository and install the dependencies:
+First, clone the repository:
+'''
+git clone https://github.com/otr-ebla/phd-dqn-lectures.git
+'''
+Create a python virtual environment:
+'''
+python3 -m venv dqn_env
+source dqn_env/bin/activate
+'''
+Install the required python packages
 '''
 pip install -r requirements.txt
 '''
