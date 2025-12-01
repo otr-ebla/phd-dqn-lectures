@@ -12,7 +12,9 @@ This repository contains the code and resources for the lecture on Deep Reinforc
 
 ## Installation
 First, clone the repository and install the dependencies:
+'''
 pip install -r requirements.txt
+'''
 
 ## Usage
 ### 1. Training (DQN)
