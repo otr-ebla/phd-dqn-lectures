@@ -1,7 +1,7 @@
 # Deep Q-Learning (DQN) Lecture
 PhD Course - December 10-11
 
-This repository contains the code and resources for the lecture on Deep Reinforcement Learning. We will explore how to solve the CartPole environment using Deep Q-Networks (DQN).
+This repository contains the code and resources for the lecture on Deep Reinforcement Learning. We will explore how to solve the CartPole and Lunar Lander Gymnasium environments using Deep Q-Networks (DQN), harcoded from scratch, using mainly Pytorch for the ML framework.
 
 ## Repository Structure
 - `naive_q_learning.py`: A simple Tabular Q-Learning implementation. We use this as a baseline to understand the limits of discretization.
