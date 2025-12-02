@@ -1,6 +1,6 @@
 import torch
 import gymnasium as gym
-from dqn_cartpole import DQN
+from dqn_cartpoleTORCH import DQN
 
 def evaluate():
     env = gym.make("CartPole-v1", render_mode="human")
