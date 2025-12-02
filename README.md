@@ -1,5 +1,5 @@
 # Deep Q-Learning (DQN) Lecture
-PhD Course - December 10-11
+Reinforcement Learning Master's Course, DIISM, Siena - December 10-11, held by PhD student Alberto Vaglio
 
 This repository contains the code and resources for the lecture on Deep Reinforcement Learning. We will explore how to solve the CartPole and Lunar Lander Gymnasium environments using Deep Q-Networks (DQN), harcoded from scratch, using mainly Pytorch for the ML framework.
 
