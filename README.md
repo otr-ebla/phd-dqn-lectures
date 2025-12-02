@@ -20,6 +20,7 @@ git clone https://github.com/otr-ebla/phd-dqn-lectures.git
 ```
 Create a python virtual environment:
 ```
+cd phd-dqn-lectures
 python3 -m venv dqn_env
 source dqn_env/bin/activate
 ```
