@@ -4,6 +4,8 @@ Reinforcement Learning Master's Course, DIISM, Siena - December 10-11, held by P
 
 This repository contains the code and resources for the lecture on Deep Reinforcement Learning. We will explore how to solve the CartPole and Lunar Lander Gymnasium environments using Deep Q-Networks (DQN), harcoded from scratch, using mainly Pytorch for the ML framework.
 
+![DQN first slide](https://github.com/otr-ebla/phd-dqn-lectures.git/slides/DQN_first.png)
+
 ## Repository Structure
 - `naive_q_learning.py`: A simple Tabular Q-Learning implementation. We use this as a baseline to understand the limits of discretization.
 - `dqn_cartpole.py`: The main script implementing the DQN algorithm with PyTorch (Experience Replay, Target Network).
