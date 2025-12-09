@@ -8,7 +8,7 @@ def evaluate():
     act_dim = env.action_space.n
 
     model = DQN(obs_dim, act_dim)
-    model.load_state_dict(torch.load("dqn_cartpole.pth"))
+    model.load_state_dict(torch.load("models/dqn_cartpole.pth"))
     model.eval()
 
     for episode in range(5):

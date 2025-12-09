@@ -103,6 +103,8 @@ loss_history = []
 loss_steps = []
 episodes_rewards = []
 global_step = 0
+
+
 plt.ion()
 fig, (ax_loss, ax_reward) = plt.subplots(2, 1, figsize=(8, 8))
 

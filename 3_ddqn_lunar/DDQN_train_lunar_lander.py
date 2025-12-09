@@ -60,7 +60,7 @@ def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400):
     gamma = 0.99
     batch_size = 128
     target_update_freq = 200
-    epsilon_decay = 50000
+    epsilon_decay = 10000
     buffer_capacity = 100000
     min_buffer_size = 1000
     
