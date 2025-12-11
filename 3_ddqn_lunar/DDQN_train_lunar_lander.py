@@ -52,16 +52,16 @@ def select_action(model, state, epsilon, act_dim):
         q_values = model(state)
         return int(torch.argmax(q_values).item())
 
-def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400):
+def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400, early_stop_threshold=200.0):
     env = gym.make('LunarLander-v3')
     
     # Iperparametri
     lr = 5e-4
     gamma = 0.99
     batch_size = 128
-    target_update_freq = 200
+    target_update_freq = 100
     epsilon_decay = 10000
-    buffer_capacity = 100000
+    buffer_capacity = 50000
     min_buffer_size = 1000
     
     print(f"--- Starting: {exp_name} | Double: {double_dqn} ---")
@@ -89,7 +89,7 @@ def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400):
         for episode in range(total_episodes):
             state, _ = env.reset()
             episode_reward = 0
-            episode_q_vals = [] # Per tracciare il bias medio nell'episodio
+            episode_q_vals = [] 
             
             while True:
                 # Epsilon Decay
@@ -105,17 +105,15 @@ def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400):
                 episode_reward += reward
                 steps_done += 1
 
-                # Training Step
-                if len(replay_buffer) >= min_buffer_size:
+                # Training Step (ogni 4 step)
+                if len(replay_buffer) >= min_buffer_size and steps_done % 4 == 0:
                     states, actions, rewards, next_states, dones = replay_buffer.sample(batch_size)
 
                     with torch.no_grad():
                         if double_dqn:
-                            # Double DQN Logic
                             best_actions = policy_net(next_states).argmax(1)
                             next_q = target_net(next_states).gather(1, best_actions.unsqueeze(1)).squeeze(1)
                         else:
-                            # Standard DQN Logic
                             next_q = target_net(next_states).max(1)[0]
                         
                         target = rewards + (1 - dones) * gamma * next_q
@@ -123,10 +121,8 @@ def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400):
                     q_values = policy_net(states)
                     current = q_values.gather(1, actions.unsqueeze(1)).squeeze(1)
                     
-                    # Raccogliamo il valore Q medio per analisi (Maximization Bias)
                     episode_q_vals.append(current.mean().item())
 
-                    #loss = nn.MSELoss()(current, target)
                     loss = nn.SmoothL1Loss()(current, target)
                     optimizer.zero_grad()
                     loss.backward()
@@ -139,13 +135,22 @@ def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400):
                 if real_done:
                     break
             
-            # Fine episodio: salviamo metriche
+            # --- FINE EPISODIO & LOGGING ---
             avg_ep_q = np.mean(episode_q_vals) if episode_q_vals else 0
             rewards_history.append(episode_reward)
             q_value_history.append(avg_ep_q)
 
+            # Calcolo media mobile ultimi 100 episodi
+            avg_100 = np.mean(rewards_history[-150:]) if len(rewards_history) >= 230 else np.mean(rewards_history)
+
             if episode % 20 == 0:
-                print(f"Ep {episode}: Reward {episode_reward:.2f} | Avg Q: {avg_ep_q:.2f} | Eps: {epsilon:.2f}")
+                print(f"Ep {episode}: Reward {episode_reward:.2f} | Avg100: {avg_100:.2f} | Avg Q: {avg_ep_q:.2f} | Eps: {epsilon:.2f}")
+
+            # --- EARLY STOPPING CHECK ---
+            if len(rewards_history) >= 100 and avg_100 >= early_stop_threshold:
+                print(f"\n✅ AMBIENTE RISOLTO! Media ultimi 100 episodi: {avg_100:.2f} >= {early_stop_threshold}")
+                print(f"Stopping early at episode {episode}")
+                break
 
     except KeyboardInterrupt:
         print("\nTraining interrotto manualmente.")
@@ -201,7 +206,7 @@ if __name__ == "__main__":
     results = {}
     
     # Nota: 300-350 episodi sono sufficienti per vedere la divergenza dei Q-Values
-    N_EPISODES = 500
+    N_EPISODES = 700
     
     print("Collecting data for Standard DQN...")
     res_dqn = run_lunar_experiment('DQN', double_dqn=False, total_episodes=N_EPISODES)
