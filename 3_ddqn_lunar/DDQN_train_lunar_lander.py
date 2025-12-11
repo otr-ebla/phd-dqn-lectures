@@ -72,7 +72,7 @@ def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400, early_st
     
     policy_net = DQN(obs_dim, action_dim).to(DEVICE)
     target_net = DQN(obs_dim, action_dim).to(DEVICE)
-    target_net.load_state_dict(policy_net.state_dict())
+    target_net.load_state_dict(policy_net.state_dict()) # Initialize target with policy weights
     
     optimizer = optim.Adam(policy_net.parameters(), lr=lr)
     replay_buffer = ReplayBuffer(buffer_capacity)
@@ -130,7 +130,7 @@ def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400, early_st
                     optimizer.step()
 
                 if steps_done % target_update_freq == 0:
-                    target_net.load_state_dict(policy_net.state_dict())
+                    target_net.load_state_dict(policy_net.state_dict()) # copy weights
 
                 if real_done:
                     break
@@ -147,10 +147,10 @@ def run_lunar_experiment(exp_name, double_dqn=True, total_episodes=400, early_st
                 print(f"Ep {episode}: Reward {episode_reward:.2f} | Avg100: {avg_100:.2f} | Avg Q: {avg_ep_q:.2f} | Eps: {epsilon:.2f}")
 
             # --- EARLY STOPPING CHECK ---
-            if len(rewards_history) >= 100 and avg_100 >= early_stop_threshold:
-                print(f"\n✅ AMBIENTE RISOLTO! Media ultimi 100 episodi: {avg_100:.2f} >= {early_stop_threshold}")
-                print(f"Stopping early at episode {episode}")
-                break
+            # if len(rewards_history) >= 100 and avg_100 >= early_stop_threshold:
+            #     print(f"\n✅ AMBIENTE RISOLTO! Media ultimi 100 episodi: {avg_100:.2f} >= {early_stop_threshold}")
+            #     print(f"Stopping early at episode {episode}")
+            #     break
 
     except KeyboardInterrupt:
         print("\nTraining interrotto manualmente.")
@@ -206,7 +206,7 @@ if __name__ == "__main__":
     results = {}
     
     # Nota: 300-350 episodi sono sufficienti per vedere la divergenza dei Q-Values
-    N_EPISODES = 700
+    N_EPISODES = 500
     
     print("Collecting data for Standard DQN...")
     res_dqn = run_lunar_experiment('DQN', double_dqn=False, total_episodes=N_EPISODES)
